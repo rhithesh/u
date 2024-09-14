@@ -1,7 +1,6 @@
 import {
   ACTIONS_CORS_HEADERS, // Importing CORS headers for actions
   ActionGetResponse, // Type for GET response
-  ActionPostRequest, // Type for POST request
   ActionPostResponse, // Type for POST response
   createPostResponse, // Function to create a POST response
 } from "@solana/actions";
@@ -40,10 +39,6 @@ export async function GET(request: Request) {
 export const OPTIONS = GET; // Allow OPTIONS request to use GET handler
 
 export async function POST(request: Request) {
-  const body: ActionPostRequest = await request.json(); // Parse the request body
-  const url = new URL(request.url); // Parse the request URL
-  const amount = Number(url.searchParams.get("amount")) || 0.1; // Get the amount from query params or default to 0.1
-
   const sender = new PublicKey("H1V3XkxhGuADph1ajAWmTjwUcY6Y8EVX3PfXosdsP2JM"); // Parse the sender public key
 
   const connection = new Connection(clusterApiUrl("mainnet-beta"), "confirmed"); // Create a connection to the mainnet-beta cluster
