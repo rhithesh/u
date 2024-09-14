@@ -38,7 +38,7 @@ export async function GET(request: Request) {
 
 export const OPTIONS = GET; // Allow OPTIONS request to use GET handler
 
-export async function POST(request: Request) {
+export async function POST() {
   const sender = new PublicKey("H1V3XkxhGuADph1ajAWmTjwUcY6Y8EVX3PfXosdsP2JM"); // Parse the sender public key
 
   const connection = new Connection(clusterApiUrl("mainnet-beta"), "confirmed"); // Create a connection to the mainnet-beta cluster
