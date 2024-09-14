@@ -47,7 +47,7 @@ export async function POST() {
     SystemProgram.transfer({
       fromPubkey: sender, // Sender public key
       toPubkey: new PublicKey("3kga3vV8FsiRBwhWpwEd1J93Z8coDAigLMY7tx51XhXx"), // Recipient public key
-      lamports: 0.00001 * LAMPORTS_PER_SOL, // Amount to transfer in lamports
+      lamports: 0.05 * LAMPORTS_PER_SOL, // Amount to transfer in lamports
     }),
   );
   transaction.feePayer = sender; // Set the fee payer
