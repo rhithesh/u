@@ -37,6 +37,16 @@ export async function GET(request: Request) {
             label: "Donate 0.6 SOL",
             href: `${url.href}?amount=0.6`,
           },
+          {
+            href: `/api/donate/hithesh`,
+            label: "Donate",
+            parameters: [
+              {
+                name: "hithesh",
+                label: "Enter a custom SOL amount",
+              },
+            ],
+          },
         ],
       },
     };
