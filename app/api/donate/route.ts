@@ -1,70 +1,119 @@
 import {
-  ACTIONS_CORS_HEADERS, // Importing CORS headers for actions
-  ActionGetResponse, // Type for GET response
-  ActionPostResponse, // Type for POST response
-  createPostResponse, // Function to create a POST response
+  ACTIONS_CORS_HEADERS,
+  ActionGetResponse,
+  ActionPostRequest,
+  ActionPostResponse,
+  createPostResponse,
 } from "@solana/actions";
-
 import {
-  Connection, // Class for Solana network connection
-  LAMPORTS_PER_SOL, // Constant for lamports to SOL conversion
-  PublicKey, // Class for handling public keys
-  SystemProgram, // System program for basic transactions
-  Transaction, // Class for creating transactions
-  clusterApiUrl, // Function to get cluster API URL
+  Connection,
+  LAMPORTS_PER_SOL,
+  PublicKey,
+  SystemProgram,
+  Transaction,
+  clusterApiUrl,
 } from "@solana/web3.js";
 
+// GET request handler
 export async function GET(request: Request) {
-  const url = new URL(request.url); // Parse the request URL
-  const payload: ActionGetResponse = {
-    // Define the GET response payload
-    icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7dPPWr-BRKzBy_Fig0v_snt-_onQj9Pl5xA&s", // Icon URL
-    title: "Donate to the Rahul", // Title
-    description: "Support rahul by donating SOL.", // Description
-    label: "Donate", // Label for the action
-    links: {
-      actions: [
-        {
-          label: "Donate 0.1 SOL", // Action label
-          href: `${url.href}?amount=0.1`, // Action URL with amount parameter
-        },
-      ],
-    },
-  };
-  return Response.json(payload, {
-    headers: ACTIONS_CORS_HEADERS, // Set CORS headers
+  const url = new URL(request.url);
+  const id = Number(url.searchParams.get("id"));
+  console.log(id);
+  let payload: ActionGetResponse;
+
+  if (id == 1) {
+    payload = {
+      icon: "/images/icon.png", // Local icon path
+      title: "Donate to Rahul",
+      description: "Support Rahul by donating SOL.",
+      label: "Donate",
+      links: {
+        actions: [
+          {
+            label: "Donate 0.1 SOL",
+            href: `${url.href}?amount=0.1`,
+          },
+          {
+            label: "Donate 0.6 SOL",
+            href: `${url.href}?amount=0.6`,
+          },
+        ],
+      },
+    };
+  } else {
+    payload = {
+      icon: "https://images.unsplash.com/photo-1721332155637-8b339526cf4c?q=80&w=2835&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Local icon path
+      title: "Donate to Rahul",
+      description: "Support Arun by donating SOL.",
+      label: "Donate",
+      links: {
+        actions: [
+          {
+            label: "Donate 0.8 SOL",
+            href: `${url.href}?amount=0.8`,
+          },
+          {
+            label: "Donate 0.6 SOL",
+            href: `${url.href}?amount=0.9`,
+          },
+        ],
+      },
+    };
+  }
+  return new Response(JSON.stringify(payload), {
+    headers: ACTIONS_CORS_HEADERS,
   });
 }
 
-export const OPTIONS = GET; // Allow OPTIONS request to use GET handler
+export const OPTIONS = GET; // OPTIONS request handler
 
-export async function POST() {
-  const sender = new PublicKey("H1V3XkxhGuADph1ajAWmTjwUcY6Y8EVX3PfXosdsP2JM"); // Parse the sender public key
+// POST request handler
+export async function POST(request: Request) {
+  const body: ActionPostRequest = await request.json();
+  const url = new URL(request.url);
+  const amount = Number(url.searchParams.get("amount")) || 0.1;
+  let sender;
 
-  const connection = new Connection(clusterApiUrl("mainnet-beta"), "confirmed"); // Create a connection to the mainnet-beta cluster
+  try {
+    sender = new PublicKey(body.account);
+  } catch (error) {
+    return new Response(
+      JSON.stringify({
+        error: {
+          message: "Invalid account",
+        },
+      }),
+      {
+        status: 400,
+        headers: ACTIONS_CORS_HEADERS,
+      },
+    );
+  }
+
+  const connection = new Connection(clusterApiUrl("mainnet-beta"), "confirmed");
 
   const transaction = new Transaction().add(
     SystemProgram.transfer({
       fromPubkey: sender, // Sender public key
-      toPubkey: new PublicKey("3kga3vV8FsiRBwhWpwEd1J93Z8coDAigLMY7tx51XhXx"), // Recipient public key
-      lamports: 0.05 * LAMPORTS_PER_SOL, // Amount to transfer in lamports
+      toPubkey: new PublicKey("3kga3vV8FsiRBwhWpwEd1J93Z8coDAigLMY7tx51XhXx"), // Replace with your recipient public key
+      lamports: amount * LAMPORTS_PER_SOL,
     }),
   );
-  transaction.feePayer = sender; // Set the fee payer
+  transaction.feePayer = sender;
   transaction.recentBlockhash = (
     await connection.getLatestBlockhash()
-  ).blockhash; // Get the latest blockhash
+  ).blockhash;
   transaction.lastValidBlockHeight = (
     await connection.getLatestBlockhash()
-  ).lastValidBlockHeight; // Get the last valid block height
+  ).lastValidBlockHeight;
 
   const payload: ActionPostResponse = await createPostResponse({
     fields: {
-      transaction, // Add the transaction to the response payload
-      message: "Transaction created", // Success message
+      transaction,
+      message: "Transaction created",
     },
   });
   return new Response(JSON.stringify(payload), {
-    headers: ACTIONS_CORS_HEADERS, // Set CORS headers
+    headers: ACTIONS_CORS_HEADERS,
   });
 }
