@@ -23,7 +23,7 @@ export async function GET(request: Request) {
 
   if (id == 1) {
     payload = {
-      icon: "/images/icon.png", // Local icon path
+      icon: "https://plus.unsplash.com/premium_photo-1674343963928-d67007d2ae74?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Local icon path
       title: "Donate to Rahul",
       description: "Support Rahul by donating SOL.",
       label: "Donate",
@@ -54,7 +54,7 @@ export async function GET(request: Request) {
           },
           {
             label: "Donate 0.6 SOL",
-            href: `${url.href}?amount=0.9`,
+            href: `${url.href}?amount=0.6`,
           },
         ],
       },
