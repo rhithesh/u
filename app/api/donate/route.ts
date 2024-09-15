@@ -38,7 +38,7 @@ export async function GET(request: Request) {
             href: `${url.href}?amount=0.6`,
           },
           {
-            href: "/api/actions/donate?oye={amount}",
+            href: `${url.href}?oye={amount}`,
             label: "Send SOL", // button text
             parameters: [
               {
