@@ -38,7 +38,7 @@ export async function GET(request: Request) {
             href: `${url.href}?amount=0.6`,
           },
           {
-            href: "/api/actions/donate?amount={amount}",
+            href: "/api/actions/donate?oye={amount}",
             label: "Send SOL", // button text
             parameters: [
               {
@@ -81,7 +81,8 @@ export const OPTIONS = GET; // OPTIONS request handler
 export async function POST(request: Request) {
   const body: ActionPostRequest = await request.json();
   const url = new URL(request.url);
-  const amount = Number(url.searchParams.get("amount")) || 0.1;
+  //const amount = Number(url.searchParams.get("amount")) || 0.1;
+  const val = Number(url.searchParams.get("oye")) || 0.1;
   let sender;
 
   try {
@@ -106,7 +107,7 @@ export async function POST(request: Request) {
     SystemProgram.transfer({
       fromPubkey: sender, // Sender public key
       toPubkey: new PublicKey("3kga3vV8FsiRBwhWpwEd1J93Z8coDAigLMY7tx51XhXx"), // Replace with your recipient public key
-      lamports: amount * LAMPORTS_PER_SOL,
+      lamports: val * LAMPORTS_PER_SOL,
     }),
   );
   transaction.feePayer = sender;
