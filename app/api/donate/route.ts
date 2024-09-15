@@ -38,13 +38,15 @@ export async function GET(request: Request) {
             href: `${url.href}?amount=0.6`,
           },
           {
-          href: "/api/actions/donate?amount={amount}",
-          label: "Send SOL", // button text
-          parameters: [
-            {
-              name: "amount", // name template literal
-              label: "Enter a SOL amount", // placeholder for the input
-            },
+            href: "/api/actions/donate?amount={amount}",
+            label: "Send SOL", // button text
+            parameters: [
+              {
+                name: "amount", // name template literal
+                label: "Enter a SOL amount", // placeholder for the input
+              },
+            ],
+          },
         ],
       },
     };
